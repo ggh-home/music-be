@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+    <link rel="icon" href="data:;base64,=" />
+    <title></title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-size: 18px;
+        width: 100vw;
+        height: 100%;
+        position: relative;
+      }
+      #warpper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        min-height: 80vh;
+        text-align: center;
+        color: #007bff;
+        font-size: 16px;
+      }
+      #infos {
+        display: flex;
+        justify-content: center;
+        bottom: 0%;
+        height: 60px;
+        width: 100%;
+        font-size: 14px;
+        color: #666;
+      }
+      #tips {
+        display: flex;
+        flex-grow: 1;
+        width: 100%;
+        justify-content: center;
+      }
+      #safe {
+        justify-content: center;
+        align-items: center;
+        background-color: #dcfce7;
+        width: 100%;
+        height: 3rem;
+        color: #22c55e;
+        position: sticky;
+        top: 0;
+        display: flex;
+      }
+      #manageWx {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 3rem;
+        background-color: #fff;
+        width: 100%;
+        position: sticky;
+        bottom: 0;
+        color: #606266;
+        border-top: #f1f1f1 2px solid;
+      }
+      #manageWx p {
+        margin-left: 20px;
+      }
+      #manageWx button {
+        margin-right: 20px;
+        background-color: #22c55e;
+        border: #f1f1f1;
+        padding: 0.4rem 1.5rem;
+        font-size: 16px;
+        border-radius: 4px;
+        color: #fff;
+      }
+      #wechat {
+        display: inline-block;
+        font-weight: 600;
+        width: 200px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        line-height: 16px;
+      }
+      #manageQr {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+      #manageQr img {
+        max-width: 337px;
+      }
+      @media (max-width: 640px) {
+        #qrcode_name {
+          font-size: 18px;
+          color: black;
+          font-weight: 700;
+          margin-top: 5vh;
+        }
+        #qrcode {
+          margin-top: 4vh;
+          width: 90vw;
+        }
+        #tips p {
+          font-size: 14px;
+          width: 80%;
+          text-align: center;
+        }
+        #qrImg {
+          max-width: 85vw;
+        }
+      }
+      @media (min-width: 641px) {
+        #qrcode_name {
+          color: black;
+          margin-top: 5vh;
+          font-weight: 700;
+        }
+        #qrcode {
+          width: 50vw;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-top: 10vh;
+        }
+        #imgwarp {
+          display: flex;
+          width: 100%;
+          justify-content: center;
+        }
+        #qrImg {
+          display: block;
+          margin: 0 auto;
+          max-width: 337px;
+        }
+        #handle {
+          display: none;
+        }
+        #tips p {
+          font-size: 14px;
+          width: 80%;
+        }
+      }
+
+      .van-popup--center {
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate3d(-50%, -50%, 0);
+        transform: translate3d(-50%, -50%, 0);
+      }
+      .van-popup {
+        position: fixed;
+        max-height: 100%;
+        overflow-y: auto;
+        background-color: #fff;
+        -webkit-transition: -webkit-transform 0.3s;
+        transition: -webkit-transform 0.3s;
+        transition: transform 0.3s;
+        transition:
+          transform 0.3s,
+          -webkit-transform 0.3s;
+        -webkit-overflow-scrolling: touch;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="warpper">
+      <div id="qrcode_name">
+        <span>抱歉，所有群都已经满了~</span>
+      </div>
+      <div id="qrcode">
+        <div id="imgwarp">
+          <img id="qrImg" alt="二维码" />
+        </div>
+      </div>
+      <div id="handle">
+        <p id="scan_tips">扫码加我个人微信吧~</p>
+      </div>
+      <div id="tips" style="display: none">
+        <p></p>
+      </div>
+
+      <div
+        id="z_index"
+        style="
+          z-index: 2005;
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: 1;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.7);
+        "></div>
+
+      <div
+        id="flex-tc"
+        class="van-popup van-popup--round van-popup--center"
+        style="width: 70vw; border-radius: 8px; z-index: 2018; display: none">
+        <div
+          class="flex flex-column items-center"
+          style="padding-bottom: 0.3rem">
+          <div id="manager_img" style="display: none">
+            <p
+              style="
+                font-size: 16px;
+                font-weight: 600;
+                color: #2f495e;
+                margin: 0rem 0px 2rem;
+                text-align: center;
+              ">
+              长按识别二维码联系活动方
+            </p>
+            <img
+              src=""
+              width="80%"
+              style="
+                text-align: center;
+                padding-left: 1%;
+                position: relative;
+              " />
+          </div>
+          <div id="manager_content" style="display: none">
+            <p
+              style="
+                font-size: 16px;
+                font-weight: 600;
+                color: #2f495e;
+                margin: 0rem 0px 2rem;
+                text-align: center;
+              ">
+              咨询活动方
+            </p>
+            <span
+              style="
+                text-align: left;
+                padding-left: 1%;
+                position: relative;
+              "></span>
+          </div>
+        </div>
+      </div>
+
+      <div id="infos">
+        <p id="footer">Hi，欢迎加入交流群~</p>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var qrcode = document.getElementById('qrImg');
+      qrcode.setAttribute(
+        'src',
+        'https://vip.123pan.cn/1834467410/%E4%BA%AB%E5%90%AC/weChatGroups/person-wechat.png',
+      );
+
+      if (!0) {
+        var safe = document.getElementById('safe');
+        safe.setAttribute('style', 'display:none');
+      }
+      var infos = document.getElementById('infos');
+      if (0) {
+        infos.style = 'display: none;';
+      } else {
+        infos.style = 'display: show;';
+      }
+
+      if (0) {
+        var tips = document.getElementById('tips');
+        tips.style = 'display: show;';
+      }
+
+      if (0) {
+        var wechat = document.getElementById('wechat');
+        wechat.innerText = '';
+      } else {
+        var wx = document.getElementById('manageWx');
+        wx.style = 'display: none;';
+      }
+
+      var manager = document.getElementById('manager');
+      if (!0) {
+        manager.setAttribute('style', 'display:none');
+      }
+      var manager_img = document.getElementById('manager_img');
+      var manager_content = document.getElementById('manager_content');
+      if (0) {
+        manager_img.setAttribute('style', '');
+      } else {
+        manager_content.setAttribute('style', '');
+      }
+
+      var scan_tips = document.getElementById('scan_tips');
+      if (!1) {
+        scan_tips.setAttribute('style', 'display:none');
+      }
+
+      var z_index = document.getElementById('z_index');
+      var flex = document.getElementById('flex-tc');
+      manager.onclick = function () {
+        z_index.setAttribute(
+          'style',
+          'z-index: 2017;display: show;    position: fixed;top: 0;left: 0;z-index: 1;width: 100%;height: 100%;background-color: rgba(0,0,0,.7);',
+        );
+        flex.setAttribute(
+          'style',
+          'width: 70vw; border-radius: 8px; z-index: 2018;padding: 30px 0;',
+        );
+      };
+      z_index.onclick = function () {
+        z_index.setAttribute('style', 'display:none');
+        flex.setAttribute('style', 'display:none');
+      };
+    </script>
+  </body>
+</html>
