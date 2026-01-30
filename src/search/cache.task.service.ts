@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { CacheSongs } from './entities/cache.songs.entity';
 import { DeepPartial, IsNull, LessThan, MoreThan, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,7 +12,7 @@ import { EnvCode } from 'src/enums/env-code.enum';
 import { SearchService } from './search.service';
 import { ThirdPlatformType } from 'src/playlist/enums/platform-type.enum';
 import dayjs, { Dayjs } from 'dayjs';
-import { dateTimeBefore, dateTimeBeforeNow } from 'src/utils/my.utils';
+import { dateTimeBeforeNow } from 'src/utils/my.utils';
 import { CacheSounds } from '../soundalbum/entities/cache.sound.entity';
 import { CacheSoundAlbums } from 'src/soundalbum/entities/cache.sound.albums.entity';
 import { MusicLevelCode } from 'src/enums/music-level-code.enum';
@@ -49,44 +49,8 @@ export class CacheSongService {
     @InjectRepository(CacheSounds)
     private cacheSoundsRepository: Repository<CacheSounds>,
     private readonly searchService: SearchService,
-  ) {}
+  ) { }
 
-  // @Cron('*/15 * * * * *')
-  // async handleCronUpdateLyric() {
-  //   console.log(`执行歌词刷新任务`);
-  //   if (this.isUpdateLyricTaskRunning) {
-  //     return;
-  //   }
-  //   this.isUpdateLyricTaskRunning = true;
-  //   console.log('歌词刷新任务开始执行');
-
-  //   const waitRefreshFirstOne = await this.cacheSongRepository.findOne({
-  //     where: { cacheStatus: 'Done', songLyric: IsNull() },
-  //   });
-
-  //   if (isEmpty(waitRefreshFirstOne)) {
-  //     console.log(`歌词任务列表为空，本次任务退出`);
-  //     this.isUpdateLyricTaskRunning = false;
-  //     return;
-  //   }
-  //   try {
-  //     console.log(`准备更新歌词信息:${JSON.stringify(waitRefreshFirstOne)}`);
-
-  //     const { songLyric } = await this.searchService.refreshMusicDetail(
-  //       waitRefreshFirstOne.platform,
-  //       waitRefreshFirstOne.songId,
-  //     );
-  //     // 检查是否过期，并刷新url
-  //     waitRefreshFirstOne.songLyric = songLyric;
-  //     this.cacheSongRepository.save(waitRefreshFirstOne);
-  //   } catch (err) {
-  //     console.log(`歌词刷新任务执行异常，${err}`);
-  //   } finally {
-  //     console.log(`歌词刷新任务执行完毕`);
-  //     // 等待1秒再执行下一个任务
-  //     this.isUpdateLyricTaskRunning = false;
-  //   }
-  // }
 
   @Cron(cronOfCacheMusic)
   async cacheMusic() {

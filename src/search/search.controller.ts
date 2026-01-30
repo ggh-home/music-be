@@ -11,7 +11,7 @@ import { SetCookieDto } from './dto/set.cookie.dto';
 
 @Controller('search')
 export class SearchController {
-  constructor(private readonly searchService: SearchService) {}
+  constructor(private readonly searchService: SearchService) { }
 
   // GET /music/:keyWord 搜索音乐
   // 返回 platform songId songTitle singerId singerName albumId isBookMarked
@@ -55,9 +55,6 @@ export class SearchController {
     @Query('pageSize') pageSize: number = 15,
     @Body() soundAlbumItem: SoundAlbum,
   ) {
-    // console.log(
-    //   `获取到 albumId:${albumId} pageNum：${pageNum} pageSize：${pageSize}`,
-    // );
     return this.searchService.searchSoundList(
       platform,
       soundAlbumItem,
@@ -67,41 +64,6 @@ export class SearchController {
     );
   }
 
-  // GET /playlist/:keyWord 搜索歌单
-  // 返回 platform playlistName playlistId playlistImg countOfSong desc
-
-  // @NonAuth()
-  // @Get('/:searchType/:keyWord')
-  // async searchMusic(
-  //   @Param('searchType') searchType: string,
-  //   @Param('keyWord') keyWord: string,
-  // ) {
-  //   console.log('searchType' + searchType + 'keyWord' + keyWord);
-  //   if (searchType === 'song') {
-  //     const musicResult = await searchMusic(keyWord, 1);
-  //     console.log('音乐搜索结果：', musicResult);
-  //     return musicResult.data;
-  //   }
-  //   if (searchType === 'singer') {
-  //     const result = await searchArtist(keyWord, 1);
-  //     console.log('歌手搜索结果：', result);
-  //     return result.data;
-  //   }
-
-  //   if (searchType === 'playList') {
-  //     const result = await searchMusicSheet(keyWord, 1);
-  //     console.log('歌单搜索结果：', result);
-  //     return result.data;
-  //   }
-  //   return [
-  //     {
-  //       id: 1,
-  //       url: 'http://192.168.0.150:3000/search/music/1', // Load media from the app bundle
-  //       title: '十年',
-  //       artist: '陈奕迅',
-  //     },
-  //   ];
-  // }
 
   @Get('/artist/songs/:platform/:singerId')
   async getArtistSongs(

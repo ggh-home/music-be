@@ -6,13 +6,12 @@ import { ThrottleLeveCode } from 'src/enums/throttle-level-code.enum';
 import * as fs from 'fs';
 import path from 'path';
 import { UserDecorator } from 'src/global_configs/user.decorator';
-import { UserAction } from './entities/user.action.entity';
 import { SuccessCode } from 'src/enums/success-code.enum';
 import { UserActionDto } from './dto/user.action.dto';
 
 @Controller('utils')
 export class UtilsApiController {
-  constructor(private readonly utilsApiService: UtilsApiService) {}
+  constructor(private readonly utilsApiService: UtilsApiService) { }
 
   @Throttle(ThrottleLeveCode.NO_LIMIT)
   @NonAuth()

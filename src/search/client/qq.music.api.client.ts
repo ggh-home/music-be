@@ -94,7 +94,6 @@ async function searchBase(query: string, page: number, type: number) {
     xsrfCookieName: 'XSRF-TOKEN',
     withCredentials: true,
   });
-  //console.log(`qq音乐原始搜索结果:${JSON.stringify(res.data)}`);
   return {
     isEnd: res.data.req_1.data.meta.sum <= page * pageSize,
     data: res.data.req_1.data.body[searchTypeMap[type]].list,
@@ -166,7 +165,6 @@ export async function importMusicSheet(urlLike) {
   }
   if (!id) {
     const match = urlLike.match(/[?&]id=(\d+)/);
-    // 如果匹配成功，获取到 id，否则返回 null
     id = match ? match[1] : null;
   }
   if (!id) {
@@ -286,9 +284,6 @@ export async function getMediaSource(
 }
 
 export async function getArtistSongs(artistItem, page) {
-  // console.log('-------getArtistSongs-------');
-  // console.log(`artistItem=${JSON.stringify(artistItem)}`);
-  // console.log('-------getArtistSongs-------');
   const pageSizeForArtist = 300;
   const url = changeUrlQuery(
     {
@@ -411,14 +406,6 @@ export async function getAlbumInfo(albumItem) {
   };
 }
 
-// export const platformInfo = {
-//   platform: '小秋音乐',
-//   author: 'Huibq',
-//   version: '0.3.0',
-//   srcUrl:
-//     'https://raw.niuma666bet.buzz/Huibq/keep-alive/master/Music_Free/xiaoqiu.js',
-//   cacheControl: 'no-cache',
-// };
 
 export class QQApiClint implements PlatformApi {
   async searchSoundAlbum(
@@ -452,9 +439,6 @@ export class QQApiClint implements PlatformApi {
       return [];
     }
     const result = await getMusicSheetInfo({ id: playListId });
-    // console.log(
-    //   `QQ搜索歌单歌曲，playlistId:${playListId} 结果：${JSON.stringify(result)}`,
-    // );
     return result.musicList.importSongs.map(item => this.convertSong(item));
   }
   async searchPlaylist(keyWord: string, pageNum: number): Promise<Array<any>> {
@@ -488,9 +472,6 @@ export class QQApiClint implements PlatformApi {
       pageNum,
       'album',
     );
-    // console.log(
-    //   `$${this.name} searchSingerAlbums结果${JSON.stringify(result.data)}`,
-    // );
     return result.data.map(item => {
       return {
         platform: this.name,
@@ -522,7 +503,6 @@ export class QQApiClint implements PlatformApi {
 
   async searchSinger(keyWord: string, pageNum: number): Promise<Array<Singer>> {
     const result = await searchArtist(keyWord, pageNum);
-    // console.log(`${this.name} searchSinger结果：${JSON.stringify(result)}`);
     return result.data.map(item => {
       return {
         platform: this.name,
