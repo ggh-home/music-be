@@ -5,7 +5,7 @@ import { XmlyApiClient } from './client/ximalaya.sound.api.client';
 
 import { CustomBadRequestException } from 'src/global_configs/custom.exception';
 import { ErrorCode } from 'src/enums/error-code.enum';
-import { dateTimeBefore, mixUpArrays } from 'src/utils/my.utils';
+import { mixUpArrays } from 'src/utils/my.utils';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CacheSongs } from './entities/cache.songs.entity';
 import { Repository } from 'typeorm';
@@ -227,32 +227,10 @@ export class SearchService {
     // 存在数据的情况，数据太旧或者没有完成列表拉取，则不使用缓存
     if (
       existCacheSoundAlbum.cacheStatus !== 'Done'
-      // ||
-      // (dateTimeBefore(
-      //   existCacheSoundAlbum.cacheCheckTime,
-      //   dayjs().subtract(48, 'hour').toDate(),
-      // ) &&
-      //   existCacheSoundAlbum.isFinished === false
-      //)
     ) {
       console.log(
         `用户准备获取专辑列表，有缓存数据，但尚未缓存完成，或者检查时间太过久远，本次不准备使用缓存~`,
       );
-      // if (!(await this.isSearchSoundListEnabled(soundAlbum.platform))) {
-      //   // 被风控了
-      //   throw new CustomBadRequestException({
-      //     errCode: ErrorCode.SOUND_LIST_DISABLED,
-      //   });
-      // }
-      // return await this.getTargetPlatform(platform).searchSoundList(
-      //   soundAlbum.albumId,
-      //   pageNum,
-      //   pageSize,
-      //   sort,
-      //   cookie,
-      //   bid,
-      //   ctn,
-      // );
       return [];
     }
     // 将会从数据库查询声音列表数据，这个等一等再实现，先把缓存做了
@@ -373,15 +351,6 @@ export class SearchService {
   }
 
   async getSoundDetail(platform: string, soundId: string): Promise<any> {
-    // const cookie = await this.cookiesRepository.findOne({
-    //   where: { platform },
-    // });
-
-    // const {
-    //   cookie: freeCookie,
-    //   bid: freeBid,
-    //   ctn: freeCtn,
-    // } = await this.getCurrentFreeCookie();
 
     // 这段逻辑是给后台服务使用的
     const { cookie, bid, ctn } = await this.getCurrentVipCookie();
@@ -518,32 +487,6 @@ export class SearchService {
     level: QQLevel | WyyLevel,
   ): Promise<Song> {
     const musicLevel = this.getMusicLevel(platform, level);
-
-    // 如果是无损，单独走无损的逻辑，不参与缓存逻辑
-    // if (await this.isLosslessLevel(platform, level)) {
-    //   console.log(
-    //     `当前音乐请求platform:${platform} level:${level} 判定为获取无损音源~`,
-    //   );
-    //   const cookie = await this.cookiesRepository.findOne({
-    //     where: { platform: platform },
-    //   });
-
-    //   const { songImg, songUrl, songLyric, finalLevel } =
-    //     await this.getTargetPlatform(platform).getMusicDetail(
-    //       songId,
-    //       cookie.cookie,
-    //       level,
-    //     );
-    //   console.log(
-    //     `无损音源获取结果：songId：${songId} songUrl:${songUrl} finalLevel:${finalLevel}`,
-    //   );
-    //   return {
-    //     songImg: songImg,
-    //     songUrl: songUrl,
-    //     songLyric: songLyric,
-    //     finalLevel: finalLevel,
-    //   } as any;
-    // }
 
     // 优先从缓存获取，如果缓存有数据，从缓存获取，并且更新count和lastUsedTime
     const existCacheSong = await this.cacheSongsRepository.findOne({

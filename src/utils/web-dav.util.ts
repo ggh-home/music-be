@@ -7,9 +7,9 @@ class WebDAVClient {
   // 内置的 WebDAV 服务器信息
   // static username = '如果要使用网盘,这里改为你的网盘WebDav协议用户名'; // 用户名
   // static password = '如果要使用网盘,这里改为你的网盘WebDav协议密码'; // 密码
-  static username = '13601017534'; // 用户名
-  static password = 'irxttqlt'; // 密码
-  static url = 'https://webdav.123pan.cn/webdav'; // WebDAV服务器的URL
+  static username = 'username'; // 用户名
+  static password = 'password'; // 密码
+  static url = 'https://url'; // WebDAV服务器的URL
   static rootPath =
     process.env.NODE_ENV === EnvCode.DEV ? '/music/dev/' : '/music/prod/';
 

@@ -139,9 +139,6 @@ export async function searchBase(query, page, type) {
 
 export async function searchMusic(query, page) {
   const res = await searchBase(query, page, 1);
-  // console.log('\n');
-  // console.log(`网易云搜索结果 page:${page} res:${JSON.stringify(res)}`);
-  // console.log('\n');
   const songs =
     'songs' in res.result ? res.result.songs.map(formatMusicItem) : [];
   return {
@@ -261,9 +258,7 @@ export async function getArtistSongs(artistId, page) {
       data: paeData,
     })
   ).data;
-  // console.log(
-  //   `歌手音乐作品搜索结果数量：${JSON.stringify(res.songs.length)}`,
-  // );
+
   return {
     isEnd: !res.more,
     data: res.songs.map(formatMusicItem),
@@ -300,7 +295,6 @@ export async function getArtistAlbums(artistId, page) {
       data: paeData,
     })
   ).data;
-  //console.log(`专辑搜索结果res:${JSON.stringify(res)}`);
   return {
     isEnd: !res.more,
     data: res.hotAlbums.map(formatAlbumItem),
@@ -354,7 +348,6 @@ async function getAlbumInfo(albumItem) {
       data: paeData,
     })
   ).data;
-  //console.log(`网易云原始专辑歌曲搜索结果:${JSON.stringify(res)}`);
   return {
     albumItem: { description: res.album.description },
     musicList: (res.songs || []).map(formatMusicItem),
@@ -378,7 +371,6 @@ async function getValidMusicItems(trackIds) {
         { headers },
       )
     ).data;
-    // 直接格式化歌曲项，不检查 URL
     const validMusicItems = res.songs.map(formatMusicItem);
     return validMusicItems;
   } catch (e) {
@@ -404,23 +396,10 @@ async function getSheetMusicById(id): Promise<ImportSongsResult> {
     )
   ).data;
 
-  //console.log(`网易云获取歌单的原始数据：${JSON.stringify(sheetDetail)}`);
-  // const importSongs = sheetDetail.playlist.tracks.map(formatMusicItem);
-  // console.log(`转换后的音乐信息：${JSON.stringify(convertMusics)}`);
   const playlistImg = sheetDetail.playlist.coverImgUrl;
   const playlistName = sheetDetail.playlist.name;
   return { playlistImg, playlistId: id, playlistName };
-  // const trackIds = sheetDetail.playlist.trackIds.map(_ => _.id);
-  // let result = [];
-  // let idx = 0;
-  // while (idx * 200 < trackIds.length) {
-  //   const res = await getValidMusicItems(
-  //     trackIds.slice(idx * 200, (idx + 1) * 200),
-  //   );
-  //   result = result.concat(res);
-  //   ++idx;
-  // }
-  // return result;
+
 }
 
 async function importMusicSheet(urlLike): Promise<ImportSongsResult> {
@@ -594,52 +573,6 @@ async function getMusicSheetInfo(sheet, pageNum, pageSize) {
   );
 }
 
-// Add other methods in similar fashion using `export`.
-
-// export default {
-//   platform: '小芸音乐',
-//   author: 'Huibq',
-//   version: '0.3.0',
-//   appVersion: '>0.1.0-alpha.0',
-//   srcUrl:
-//     'https://raw.niuma666bet.buzz/Huibq/keep-alive/master/Music_Free/xiaoyun.js',
-//   cacheControl: 'no-store',
-//   hints: {
-//     importMusicSheet: [
-//       '网易云：APP点击分享，然后复制链接',
-//       '默认歌单无法导入，先新建一个空白歌单复制过去再导入新歌单即可',
-//     ],
-//   },
-//   supportedSearchType: ['music', 'album', 'sheet', 'artist', 'lyric'],
-//   search: async function (query, page, type) {
-//     if (type === 'music') {
-//       return await searchMusic(query, page);
-//     }
-//     if (type === 'album') {
-//       return await searchAlbum(query, page);
-//     }
-//     if (type === 'artist') {
-//       return await searchArtist(query, page);
-//     }
-//     if (type === 'sheet') {
-//       return await searchMusicSheet(query, page);
-//     }
-//     if (type === 'lyric') {
-//       return await searchLyric(query, page);
-//     }
-//   },
-//   getMediaSource,
-//   getMusicInfo,
-//   getAlbumInfo,
-//   getLyric,
-//   getArtistWorks,
-//   importMusicSheet,
-//   getTopLists,
-//   getTopListDetail,
-//   getRecommendSheetTags,
-//   getMusicSheetInfo,
-//   getRecommendSheetsByTag,
-// };
 
 export class WyyApiClient implements PlatformApi {
   name: string = ThirdPlatformType.WYY;
@@ -705,9 +638,7 @@ export class WyyApiClient implements PlatformApi {
   }
   async searchSingerAlbums(singerId: string, pageNum: number): Promise<any> {
     const result = await getArtistAlbums(singerId, pageNum);
-    // console.log(
-    //   `$${this.name} searchSingerAlbums结果${JSON.stringify(result.data)}`,
-    // );
+
     return result.data.map(item => {
       return {
         platform: this.name,
@@ -727,14 +658,11 @@ export class WyyApiClient implements PlatformApi {
     pageNum: number,
   ): Promise<Array<Song>> {
     const result = await getArtistSongs(singerId, pageNum);
-    // console.log(
-    //   `$${this.name} searchSingerSongs结果：${JSON.stringify(result.data)}`,
-    // );
+
     return result.data.map(item => this.convertSong(item));
   }
   async searchSinger(keyWord: string, pageNum: number): Promise<Array<Singer>> {
     const result = await searchArtist(keyWord, pageNum);
-    //console.log(`${this.name} searchSinger结果：${JSON.stringify(result)}`);
     return result.data.map(item => {
       return {
         platform: this.name,

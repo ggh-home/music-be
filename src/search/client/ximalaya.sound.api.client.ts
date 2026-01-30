@@ -2,15 +2,12 @@ import { ThirdPlatformType } from 'src/playlist/enums/platform-type.enum';
 import { PlatformApi } from './platform.api.interface';
 import axios from 'axios';
 import { EnvCode } from 'src/enums/env-code.enum';
-import { platform } from 'os';
 import { isEmpty } from 'lodash';
 import { UtilsApiService } from 'src/utils-api/utils.api.service';
-import { ConfigKeyCode } from 'src/enums/config.key.code.enum';
 
-const configRetryTimes = 3;
 
 export class XmlyApiClient implements PlatformApi {
-  constructor(private readonly utilsService: UtilsApiService) {}
+  constructor(private readonly utilsService: UtilsApiService) { }
 
   name: string = ThirdPlatformType.XMLY;
 
@@ -20,12 +17,11 @@ export class XmlyApiClient implements PlatformApi {
   ): Promise<Array<SoundAlbum>> {
     const res = (
       await axios.get(
-        `http://${
-          process.env.NODE_ENV === EnvCode.DEV
-            ? '192.168.0.150'
-            : process.env.NODE_ENV === EnvCode.PROD
-              ? '172.16.22.26'
-              : '192.168.0.4'
+        `http://${process.env.NODE_ENV === EnvCode.DEV
+          ? '192.168.0.150'
+          : process.env.NODE_ENV === EnvCode.PROD
+            ? '172.16.22.26'
+            : '192.168.0.4'
         }:5123/XMLY/search?keyWord=${keyWord}&pageNum=${pageNum}&pageSize=15`,
         {
           proxy: false,
@@ -50,12 +46,11 @@ export class XmlyApiClient implements PlatformApi {
     const sortValue = sort === 'ASC' ? 0 : 1;
     let soundListResult = (
       await axios.get(
-        `http://${
-          process.env.NODE_ENV === EnvCode.DEV
-            ? '192.168.0.150'
-            : process.env.NODE_ENV === EnvCode.PROD
-              ? '172.16.22.26'
-              : '192.168.0.4'
+        `http://${process.env.NODE_ENV === EnvCode.DEV
+          ? '192.168.0.150'
+          : process.env.NODE_ENV === EnvCode.PROD
+            ? '172.16.22.26'
+            : '192.168.0.4'
         }:5123/XMLY/album-detail?albumId=${albumId}&pageNum=${pageNum}&pageSize=${pageSize}&cookie=${encodeURIComponent(cookie)}&bid=${encodeURIComponent(bid)}&ctn=${encodeURIComponent(ctn)}&sort=${sortValue}`,
         {
           proxy: false,
@@ -126,12 +121,11 @@ export class XmlyApiClient implements PlatformApi {
   ): Promise<any> {
     const res = (
       await axios.get(
-        `http://${
-          process.env.NODE_ENV === EnvCode.DEV
-            ? '192.168.0.150'
-            : process.env.NODE_ENV === EnvCode.PROD
-              ? hostOfProd
-              : '192.168.0.4'
+        `http://${process.env.NODE_ENV === EnvCode.DEV
+          ? '192.168.0.150'
+          : process.env.NODE_ENV === EnvCode.PROD
+            ? hostOfProd
+            : '192.168.0.4'
         }:5123/XMLY/sound/url?trackId=${soundId}&cookie=${encodeURIComponent(cookie)}&bid=${encodeURIComponent(bid)}&ctn=${encodeURIComponent(ctn)}`,
         {
           proxy: false,
@@ -158,7 +152,6 @@ export class XmlyApiClient implements PlatformApi {
   }
 
   convertSound(item: any): Sound {
-    // 图片路径 storages/b3fc-audiofreehighqps/2B/56/GMCoOR8KUG-GAAGBPgLnJQWO.jpg
     return {
       platform: this.name,
       sort: item.index,
